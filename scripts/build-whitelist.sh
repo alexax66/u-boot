@@ -24,21 +24,21 @@ export LC_ALL=C LC_COLLATE=C
 # Kconfig and defconfig files.
 #
 (
-git grep CONFIG_SYS_EXTRA_OPTIONS |sed -n \
+git grep CONFIG_SYS_EXTRA_OPTIONS |gsed -n \
 	's/.*CONFIG_SYS_EXTRA_OPTIONS="\(.*\)"/\1/ p' \
 	| tr , '\n' \
-	| sed 's/ *\([A-Za-z0-9_]*\).*/CONFIG_\1/'
+	| gsed 's/ *\([A-Za-z0-9_]*\).*/CONFIG_\1/'
 
 git grep CONFIG_ | \
 	egrep -vi "(Kconfig:|defconfig:|README|\.py|\.pl:)" \
 	| tr ' \t' '\n\n' \
-	| sed -n 's/^\(CONFIG_[A-Za-z0-9_]*\).*/\1/p'
+	| gsed -n 's/^\(CONFIG_[A-Za-z0-9_]*\).*/\1/p'
 ) \
 	|sort |uniq >scripts/config_whitelist.txt.tmp1;
 
 # Finally, we need a list of the valid Kconfig options to exclude these from
 # the whitelist.
-cat `find . -name "Kconfig*"` |sed -n \
+cat `find . -name "Kconfig*"` |gsed -n \
 	-e 's/^\s*config *\([A-Za-z0-9_]*\).*$/CONFIG_\1/p' \
 	-e 's/^\s*menuconfig *\([A-Za-z0-9_]*\).*$/CONFIG_\1/p' \
 	|sort |uniq >scripts/config_whitelist.txt.tmp2

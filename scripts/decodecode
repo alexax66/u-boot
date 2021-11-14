@@ -50,7 +50,7 @@ if [ -z "$code" ]; then
 fi
 
 echo $code
-code=`echo $code | sed -e 's/.*Code: //'`
+code=`echo $code | gsed -e 's/.*Code: //'`
 
 width=`expr index "$code" ' '`
 width=$((($width-1)/2))
@@ -94,7 +94,7 @@ if [ $marker -ne 0 ]; then
 	echo ======== >> $T.oo
 	beforemark=`echo "$code"`
 	echo -n "	.$type 0x" > $T.s
-	echo $beforemark | sed -e 's/ /,0x/g; s/[<>()]//g' >> $T.s
+	echo $beforemark | gsed -e 's/ /,0x/g; s/[<>()]//g' >> $T.s
 	disas $T
 	cat $T.dis >> $T.oo
 	rm -f $T.o $T.s $T.dis
@@ -104,7 +104,7 @@ if [ $marker -ne 0 ]; then
 fi
 echo Code starting with the faulting instruction  > $T.aa
 echo =========================================== >> $T.aa
-code=`echo $code | sed -e 's/ [<(]/ /;s/[>)] / /;s/ /,0x/g; s/[>)]$//'`
+code=`echo $code | gsed -e 's/ [<(]/ /;s/[>)] / /;s/ /,0x/g; s/[>)]$//'`
 echo -n "	.$type 0x" > $T.s
 echo $code >> $T.s
 disas $T

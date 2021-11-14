@@ -220,7 +220,7 @@ foreach my $ref (keys %broken_ref) {
 		$f =~ s,^./,,;
 		print "INFO: Replacing $ref to $f\n";
 		foreach my $j (qx(git grep -l $ref)) {
-			qx(sed "s\@$ref\@$f\@g" -i $j);
+			qx(gsed "s\@$ref\@$f\@g" -i $j);
 		}
 	}
 }

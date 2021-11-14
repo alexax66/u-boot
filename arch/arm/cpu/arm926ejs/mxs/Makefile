@@ -29,7 +29,7 @@ cmd_mkivt_mxs =								\
 	sz=`expr \`stat -c "%s" $^\` + 64 + 3904 + 128` ;		\
 	echo -n "0x402000d1 $2 0 0 0 $3 $4 0 $$sz 0 0 0 0 0 0 0" |	\
 	tr -s " " | xargs -d " " -i printf "%08x\n" "{}" | rev |	\
-	sed "s/\(.\)\(.\)/\\\\\\\\x\2\1\n/g" | xargs -i printf "{}" >$@
+	gsed "s/\(.\)\(.\)/\\\\\\\\x\2\1\n/g" | xargs -i printf "{}" >$@
 
 # Align binary to 64B
 quiet_cmd_mkalign_mxs = MXSALGN $@
@@ -43,8 +43,8 @@ cmd_mkcsfreq_mxs =							\
 	ivt=$(word 1,$^) ;						\
 	bin=$(word 2,$^) ;						\
 	csf=$(word 3,$^) ;						\
-	sed "s@VENDOR@$(VENDOR)@g;s@BOARD@$(BOARD)@g" "$$csf" |		\
-		sed '/^\#\#Blocks/ d' > $@ ;				\
+	gsed "s@VENDOR@$(VENDOR)@g;s@BOARD@$(BOARD)@g" "$$csf" |		\
+		gsed '/^\#\#Blocks/ d' > $@ ;				\
 	echo "  Blocks = $2 0x0 `stat -c '%s' $$bin` \"$$bin\" , \\" >> $@ ; \
 	echo "           $3 0x0 0x40 \"$$ivt\"" >> $@
 

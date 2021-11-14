@@ -177,7 +177,7 @@ coccinelle () {
     COCCI="$1"
 
     OPT=`grep "Option" $COCCI | cut -d':' -f2`
-    REQ=`grep "Requires" $COCCI | cut -d':' -f2 | sed "s| ||"`
+    REQ=`grep "Requires" $COCCI | cut -d':' -f2 | gsed "s| ||"`
     REQ_NUM=$(echo $REQ | ${DIR}/scripts/ld-version.sh)
     if [ "$REQ_NUM" != "0" ] ; then
 	    if [ "$SPATCH_VERSION_NUM" -lt "$REQ_NUM" ] ; then
@@ -194,14 +194,14 @@ coccinelle () {
 
     if [ $VERBOSE -ne 0 -a $ONLINE -eq 0 ] ; then
 
-	FILE=`echo $COCCI | sed "s|$srctree/||"`
+	FILE=`echo $COCCI | gsed "s|$srctree/||"`
 
 	echo "Processing `basename $COCCI`"
 	echo "with option(s) \"$OPT\""
 	echo ''
 	echo 'Message example to submit a patch:'
 
-	sed -ne 's|^///||p' $COCCI
+	gsed -ne 's|^///||p' $COCCI
 
 	if [ "$MODE" = "patch" ] ; then
 	    echo ' The semantic patch that makes this change is available'
@@ -220,9 +220,9 @@ coccinelle () {
 	echo ' http://coccinelle.lip6.fr/'
 	echo ''
 
-	if [ "`sed -ne 's|^//#||p' $COCCI`" ] ; then
+	if [ "`gsed -ne 's|^//#||p' $COCCI`" ] ; then
 	    echo 'Semantic patch information:'
-	    sed -ne 's|^//#||p' $COCCI
+	    gsed -ne 's|^//#||p' $COCCI
 	    echo ''
 	fi
     fi

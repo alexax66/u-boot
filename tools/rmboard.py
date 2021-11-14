@@ -50,7 +50,7 @@ def rm_kconfig_include(path):
     fname = stdout.split(':')[0]
 
     print("Fixing up '%s' to remove reference to '%s'" % (fname, path))
-    cmd = ['sed', '-i', '\|%s|d' % path, fname]
+    cmd = ['gsed', '-i', '\|%s|d' % path, fname]
     stdout = command.RunPipe([cmd], capture=True).stdout
 
     cmd = ['git', 'add', fname]

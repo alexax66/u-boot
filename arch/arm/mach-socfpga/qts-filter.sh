@@ -5,7 +5,7 @@
 # lines ending in '\'.
 #
 fix_newlines_in_macros() {
-	sed -n ':next;s/\r$//;/[^\\]\\$/ {N;s/\\\n//;b next};p' $1
+	gsed -n ':next;s/\r$//;/[^\\]\\$/ {N;s/\\\n//;b next};p' $1
 }
 
 #
@@ -43,7 +43,7 @@ EOF
 	# Retrieve the scan chain config and zap the ad-hoc length encoding
 	fix_newlines_in_macros \
 		${in_bsp_dir}/generated/iocsr_config_${soc}.c |
-	sed -n '/^const/ !b; :next {/^const/ s/(.*)//;p;n;b next}'
+	gsed -n '/^const/ !b; :next {/^const/ s/(.*)//;p;n;b next}'
 
 	cat << EOF
 
@@ -79,7 +79,7 @@ EOF
 	# Retrieve the pinmux config and zap the ad-hoc length encoding
 	fix_newlines_in_macros \
 		${in_bsp_dir}/generated/pinmux_config_${soc}.c |
-	sed -n '/^unsigned/ !b; :next {/^unsigned/ {s/\[.*\]/[]/;s/unsigned long/const u8/};p;n;b next}'
+	gsed -n '/^unsigned/ !b; :next {/^unsigned/ {s/\[.*\]/[]/;s/unsigned long/const u8/};p;n;b next}'
 
 	cat << EOF
 
@@ -115,7 +115,7 @@ EOF
 	# Retrieve the pll config and zap parenthesis
 	fix_newlines_in_macros \
 		${in_bsp_dir}/generated/pll_config.h |
-	sed -n '/CONFIG_HPS/ !b; :next {/CONFIG_HPS/ s/[()]//g;/endif/ b;p;n;b next}'
+	gsed -n '/CONFIG_HPS/ !b; :next {/CONFIG_HPS/ s/[()]//g;/endif/ b;p;n;b next}'
 
 	cat << EOF
 
@@ -160,35 +160,35 @@ EOF
 	# Retrieve the sdram config, zap broken lines and zap parenthesis
 	fix_newlines_in_macros \
 		${in_bsp_dir}/generated/sdram/sdram_config.h |
-	sed -n "/\\\\$/ {N;s/ \\\\\n/\t/};p" |
-	sed -n '/CONFIG_HPS/ !b; :next {/CONFIG_HPS/ s/[()]//g;/endif/ b;p;n;b next}' |
+	gsed -n "/\\\\$/ {N;s/ \\\\\n/\t/};p" |
+	gsed -n '/CONFIG_HPS/ !b; :next {/CONFIG_HPS/ s/[()]//g;/endif/ b;p;n;b next}' |
 		sort -u | grep_sdram_config
 
 	echo ""
 	echo "/* Sequencer auto configuration */"
 	fix_newlines_in_macros \
 		${in_qts_dir}/hps_isw_handoff/*/sequencer_auto.h |
-	sed -n "/__RW_MGR/ {s/__//;s/ \+\([^ ]\+\)$/\t\1/p}" |
+	gsed -n "/__RW_MGR/ {s/__//;s/ \+\([^ ]\+\)$/\t\1/p}" |
 		sort -u | grep_sdram_config
 
 	echo ""
 	echo "/* Sequencer defines configuration */"
 	fix_newlines_in_macros \
 		${in_qts_dir}/hps_isw_handoff/*/sequencer_defines.h |
-	sed -n "/^#define [^_]/ {s/__//;s/ \+\([^ ]\+\)$/\t\1/p}" |
+	gsed -n "/^#define [^_]/ {s/__//;s/ \+\([^ ]\+\)$/\t\1/p}" |
 		sort -u | grep_sdram_config
 
 	echo ""
 	echo "/* Sequencer ac_rom_init configuration */"
 	fix_newlines_in_macros \
 		${in_qts_dir}/hps_isw_handoff/*/sequencer_auto_ac_init.c |
-	sed -n '/^const.*\[/ !b; :next {/^const.*\[/ {N;s/\n//;s/alt_u32/u32/;s/\[.*\]/[]/};/endif/ b;p;n;b next}'
+	gsed -n '/^const.*\[/ !b; :next {/^const.*\[/ {N;s/\n//;s/alt_u32/u32/;s/\[.*\]/[]/};/endif/ b;p;n;b next}'
 
 	echo ""
 	echo "/* Sequencer inst_rom_init configuration */"
 	fix_newlines_in_macros \
 		${in_qts_dir}/hps_isw_handoff/*/sequencer_auto_inst_init.c |
-	sed -n '/^const.*\[/ !b; :next {/^const.*\[/ {N;s/\n//;s/alt_u32/u32/;s/\[.*\]/[]/};/endif/ b;p;n;b next}'
+	gsed -n '/^const.*\[/ !b; :next {/^const.*\[/ {N;s/\n//;s/alt_u32/u32/;s/\[.*\]/[]/};/endif/ b;p;n;b next}'
 
 	cat << EOF
 

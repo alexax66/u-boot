@@ -21,7 +21,7 @@ include include/host_arch.h
 ifeq ("", "$(CROSS_COMPILE)")
   MK_ARCH="${shell uname -m}"
 else
-  MK_ARCH="${shell echo $(CROSS_COMPILE) | sed -n 's/^\s*\([^\/]*\/\)*\([^-]*\)-\S*/\2/p'}"
+  MK_ARCH="${shell echo $(CROSS_COMPILE) | gsed -n 's/^\s*\([^\/]*\/\)*\([^-]*\)-\S*/\2/p'}"
 endif
 unexport HOST_ARCH
 ifeq ("x86_64", $(MK_ARCH))
@@ -252,7 +252,7 @@ unexport CDPATH
 #########################################################################
 
 HOSTARCH := $(shell uname -m | \
-	sed -e s/i.86/x86/ \
+	gsed -e s/i.86/x86/ \
 	    -e s/sun4u/sparc64/ \
 	    -e s/arm.*/arm/ \
 	    -e s/sa110/arm/ \
@@ -262,7 +262,7 @@ HOSTARCH := $(shell uname -m | \
 	    -e s/sh.*/sh/)
 
 HOSTOS := $(shell uname -s | tr '[:upper:]' '[:lower:]' | \
-	    sed -e 's/\(cygwin\).*/cygwin/')
+	    gsed -e 's/\(cygwin\).*/cygwin/')
 
 export	HOSTARCH HOSTOS
 
@@ -880,7 +880,7 @@ LDPPFLAGS += \
 	-include $(srctree)/include/u-boot/u-boot.lds.h \
 	-DCPUDIR=$(CPUDIR) \
 	$(shell $(LD) --version | \
-	  sed -ne 's/GNU ld version \([0-9][0-9]*\)\.\([0-9][0-9]*\).*/-DLD_MAJOR=\1 -DLD_MINOR=\2/p')
+	  gsed -ne 's/GNU ld version \([0-9][0-9]*\)\.\([0-9][0-9]*\).*/-DLD_MAJOR=\1 -DLD_MINOR=\2/p')
 
 #########################################################################
 #########################################################################
@@ -1239,7 +1239,7 @@ binary_size_check: u-boot-nodtb.bin FORCE
 	@file_size=$(shell wc -c u-boot-nodtb.bin | awk '{print $$1}') ; \
 	map_size=$(shell cat u-boot.map | \
 		awk '/_image_copy_start/ {start = $$1} /_image_binary_end/ {end = $$1} END {if (start != "" && end != "") print "ibase=16; " toupper(end) " - " toupper(start)}' \
-		| sed 's/0X//g' \
+		| gsed 's/0X//g' \
 		| bc); \
 	if [ "" != "$$map_size" ]; then \
 		if test $$map_size -ne $$file_size; then \
@@ -1879,7 +1879,7 @@ define filechk_version.h
 	echo \#define U_BOOT_VERSION \"U-Boot \" PLAIN_VERSION; \
 	echo \#define U_BOOT_VERSION_NUM $(VERSION); \
 	echo \#define U_BOOT_VERSION_NUM_PATCH $$(echo $(PATCHLEVEL) | \
-		sed -e "s/^0*//"); \
+		gsed -e "s/^0*//"); \
 	echo \#define CC_VERSION_STRING \"$$(LC_ALL=C $(CC) --version | head -n 1)\"; \
 	echo \#define LD_VERSION_STRING \"$$(LC_ALL=C $(LD) --version | head -n 1)\"; )
 endef
@@ -1914,7 +1914,7 @@ endef
 define filechk_defaultenv.h
 	( { grep -v '^#' | grep -v '^$$' || true ; echo '' ; } | \
 	 tr '\n' '\0' | \
-	 sed -e 's/\\\x0\s*//g' | \
+	 gsed -e 's/\\\x0\s*//g' | \
 	 xxd -i ; )
 endef
 
@@ -2088,7 +2088,7 @@ cross_tools: tools ;
 .PHONY : CHANGELOG
 CHANGELOG:
 	git log --no-merges U-Boot-1_1_5.. | \
-	unexpand -a | sed -e 's/\s\s*$$//' > $@
+	unexpand -a | gsed -e 's/\s\s*$$//' > $@
 
 #########################################################################
 
@@ -2312,7 +2312,7 @@ endif
 
 quiet_cmd_genenv = GENENV  $@
 cmd_genenv = $(OBJCOPY) --dump-section .rodata.default_environment=$@ env/common.o; \
-	sed --in-place -e 's/\x00/\x0A/g' $@
+	gsed --in-place -e 's/\x00/\x0A/g' $@
 
 u-boot-initial-env: u-boot.bin
 	$(call if_changed,genenv)

@@ -39,7 +39,7 @@ LIBFDT_SOURCE="Makefile.libfdt fdt.c fdt.h fdt_addresses.c fdt_empty_tree.c \
 		fdt_wip.c libfdt.h libfdt_env.h libfdt_internal.h"
 
 get_last_dtc_version() {
-	git log --oneline scripts/dtc/ | grep 'upstream' | head -1 | sed -e 's/^.* \(.*\)/\1/'
+	git log --oneline scripts/dtc/ | grep 'upstream' | head -1 | gsed -e 's/^.* \(.*\)/\1/'
 }
 
 last_dtc_ver=$(get_last_dtc_version)
@@ -63,8 +63,8 @@ for f in $LIBFDT_SOURCE; do
        git add libfdt/${f}
 done
 
-sed -i -- 's/#include <libfdt_env.h>/#include "libfdt_env.h"/g' ./libfdt/libfdt.h
-sed -i -- 's/#include <fdt.h>/#include "fdt.h"/g' ./libfdt/libfdt.h
+gsed -i -- 's/#include <libfdt_env.h>/#include "libfdt_env.h"/g' ./libfdt/libfdt.h
+gsed -i -- 's/#include <fdt.h>/#include "fdt.h"/g' ./libfdt/libfdt.h
 git add ./libfdt/libfdt.h
 
 commit_msg=$(cat << EOF

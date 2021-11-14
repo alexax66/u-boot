@@ -179,7 +179,7 @@ LDPPFLAGS += \
 	-include $(objtree)/include/config.h \
 	-DCPUDIR=$(CPUDIR) \
 	$(shell $(LD) --version | \
-	  sed -ne 's/GNU ld version \([0-9][0-9]*\)\.\([0-9][0-9]*\).*/-DLD_MAJOR=\1 -DLD_MINOR=\2/p')
+	  gsed -ne 's/GNU ld version \([0-9][0-9]*\)\.\([0-9][0-9]*\).*/-DLD_MAJOR=\1 -DLD_MINOR=\2/p')
 
 # Turn various CONFIG symbols into IMAGE symbols for easy reuse of
 # the scripts between SPL and TPL.

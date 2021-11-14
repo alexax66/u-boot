@@ -15,7 +15,7 @@ if [ ${#gas} -eq 0 ]; then
 fi
 
 version_string=$($gas --version | head -1 | \
-	sed -e 's/(.*)//; s/[^0-9.]*\([0-9.]*\).*/\1/')
+	gsed -e 's/(.*)//; s/[^0-9.]*\([0-9.]*\).*/\1/')
 
 MAJOR=$(echo $version_string | cut -d . -f 1)
 MINOR=$(echo $version_string | cut -d . -f 2)

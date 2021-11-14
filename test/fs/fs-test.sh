@@ -440,7 +440,7 @@ check_md5() {
 	# The md5 list, each line is of the form:
 	# - <md5>
 	# the 2nd field is the actual md5
-	md5_dst=`sed -n $4p $3`
+	md5_dst=`gsed -n $4p $3`
 	md5_dst=($md5_dst)
 	md5_dst=${md5_dst[0]}
 

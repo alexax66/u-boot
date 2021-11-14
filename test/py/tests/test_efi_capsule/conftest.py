@@ -44,7 +44,7 @@ def efi_capsule_data(request, u_boot_config):
         # two regions: one for u-boot.bin and the other for u-boot.env
         check_call('cd %s; echo -n u-boot:Old > u-boot.bin.old; echo -n u-boot:New > u-boot.bin.new; echo -n u-boot-env:Old -> u-boot.env.old; echo -n u-boot-env:New > u-boot.env.new' % data_dir,
                    shell=True)
-        check_call('sed -e \"s?BINFILE1?u-boot.bin.new?\" -e \"s?BINFILE2?u-boot.env.new?\" %s/test/py/tests/test_efi_capsule/uboot_bin_env.its > %s/uboot_bin_env.its' %
+        check_call('gsed -e \"s?BINFILE1?u-boot.bin.new?\" -e \"s?BINFILE2?u-boot.env.new?\" %s/test/py/tests/test_efi_capsule/uboot_bin_env.its > %s/uboot_bin_env.its' %
                    (u_boot_config.source_dir, data_dir),
                    shell=True)
         check_call('cd %s; %s/tools/mkimage -f uboot_bin_env.its uboot_bin_env.itb' %

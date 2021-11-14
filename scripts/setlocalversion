@@ -99,7 +99,7 @@ scm_version()
 		else
 			tag=$(printf '%s' "$hgid" | cut -d' ' -f2)
 			if [ -z "$tag" -o "$tag" = tip ]; then
-				id=$(printf '%s' "$hgid" | sed 's/[+ ].*//')
+				id=$(printf '%s' "$hgid" | gsed 's/[+ ].*//')
 				printf '%s%s' -hg "$id"
 			fi
 		fi

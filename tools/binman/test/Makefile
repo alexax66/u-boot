@@ -7,7 +7,7 @@
 # SPDX-License-Identifier:      GPL-2.0+
 #
 
-HOSTARCH := $(shell uname -m | sed -e s/i.86/x86/ )
+HOSTARCH := $(shell uname -m | gsed -e s/i.86/x86/ )
 ifeq ($(findstring $(HOSTARCH),"x86" "x86_64"),)
 ifeq ($(findstring $(MAKECMDGOALS),"help" "clean"),)
 ifndef CROSS_COMPILE

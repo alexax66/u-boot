@@ -87,7 +87,7 @@ EOF
 }
 
 parse_key() {
-	sed '/\ \ \ \ /s/://g' key.txt | awk  '!/\ \ \ \ / {printf("\n%s\n", $0)}; /\ \ \ \ / {printf("%s", $0)}' | sed 's/\ \ \ \ //g' | awk "/$1:/{getline; print}"
+	gsed '/\ \ \ \ /s/://g' key.txt | awk  '!/\ \ \ \ / {printf("\n%s\n", $0)}; /\ \ \ \ / {printf("%s", $0)}' | gsed 's/\ \ \ \ //g' | awk "/$1:/{getline; print}"
 }
 
 gen_degen_key() {
@@ -100,7 +100,7 @@ gen_degen_key() {
 	DEGEN_COEFF=$( parse_key 'coefficient' )
 	gen_degen_template
 
-	sed -e "s/DEGEN_MODULUS/$DEGEN_MODULUS/"\
+	gsed -e "s/DEGEN_MODULUS/$DEGEN_MODULUS/"\
 		-e "s/DEGEN_P/$DEGEN_P/" \
 		-e "s/DEGEN_Q/$DEGEN_Q/" \
 		-e "s/DEGEN_COEFF/$DEGEN_COEFF/" \
@@ -220,7 +220,7 @@ else				# Non BOOTCORE, loaded by SYSFW
 	CERTTYPE=$(printf "0x%08x" 0)
 fi
 
-SHA_VAL=`openssl dgst -sha512 -hex $BIN | sed -e "s/^.*= //g"`
+SHA_VAL=`openssl dgst -sha512 -hex $BIN | gsed -e "s/^.*= //g"`
 BIN_SIZE=`cat $BIN | wc -c`
 ADDR=`printf "%08x" $LOADADDR`
 
@@ -230,7 +230,7 @@ gen_cert() {
 	#echo "	IMAGE_SIZE = $BIN_SIZE"
 	#echo "	CERT_TYPE = $CERTTYPE"
 	#echo "	DEBUG_TYPE = $DEBUG_TYPE"
-	sed -e "s/TEST_IMAGE_LENGTH/$BIN_SIZE/"	\
+	gsed -e "s/TEST_IMAGE_LENGTH/$BIN_SIZE/"	\
 		-e "s/TEST_IMAGE_SHA_VAL/$SHA_VAL/" \
 		-e "s/TEST_CERT_TYPE/$CERTTYPE/" \
 		-e "s/TEST_BOOT_CORE_OPTS/$BOOTCORE_OPTS/" \

@@ -60,7 +60,7 @@ endif
 
 $(obj)/kwbimage.cfg: $(src)/kwbimage.cfg.in include/autoconf.mk \
 		include/config/auto.conf
-	$(Q)sed -ne '$(foreach V,$(KWB_REPLACE),s/^#@$(V)/$(V) $(KWB_CFG_$(V))/;)p' \
+	$(Q)gsed -ne '$(foreach V,$(KWB_REPLACE),s/^#@$(V)/$(V) $(KWB_CFG_$(V))/;)p' \
 	<$< >$(dir $@)$(@F)
 
 endif # CONFIG_SPL_BUILD

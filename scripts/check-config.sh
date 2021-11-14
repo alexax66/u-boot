@@ -39,12 +39,12 @@ new_adhoc="${path}.adhoc"
 export LC_ALL=C
 export LC_COLLATE=C
 
-cat ${path} |sed -nr 's/^#define (CONFIG_[A-Za-z0-9_]*).*/\1/p' |sort |uniq \
+cat ${path} |gsed -nr 's/^#define (CONFIG_[A-Za-z0-9_]*).*/\1/p' |sort |uniq \
 	>${configs}
 
 comm -23 ${configs} ${whitelist} > ${suspects}
 
-cat `find ${srctree} -name "Kconfig*"` |sed -nr \
+cat `find ${srctree} -name "Kconfig*"` |gsed -nr \
 	-e 's/^[[:blank:]]*config *([A-Za-z0-9_]*).*$/CONFIG_\1/p' \
 	-e 's/^[[:blank:]]*menuconfig ([A-Za-z0-9_]*).*$/CONFIG_\1/p' \
 	|sort |uniq > ${ok}

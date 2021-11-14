@@ -23,7 +23,7 @@ for f in $blobs; do
 		exit 1
 	fi
 
-	sed -in "s;$f;$tmp;" $file
+	gsed -in "s;$f;$tmp;" $file
 done
 
 exit 0

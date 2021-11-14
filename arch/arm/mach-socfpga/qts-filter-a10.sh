@@ -5,7 +5,7 @@
 # lines ending in '\'.
 #
 fix_newlines_in_macros() {
-	sed -n ':next;s/\r$//;/[^\\]\\$/ {N;s/\\\n//;b next};p' $1
+	gsed -n ':next;s/\r$//;/[^\\]\\$/ {N;s/\\\n//;b next};p' $1
 }
 
 #filter out only what we need from a10 hps.xml
@@ -38,36 +38,36 @@ EOF
 		${hps_xml} | egrep "clk_hz" |
 			awk -F"'" '{ gsub("\\.","_",$2) ; \
 				print "#define" " " toupper($2) " " $4}' |
-			sed 's/\.[0-9]//' |
-			sed 's/I_CLK_MGR_//' |
+			gsed 's/\.[0-9]//' |
+			gsed 's/I_CLK_MGR_//' |
 			sort
 	fix_newlines_in_macros \
 		${hps_xml} | egrep "i_clk_mgr_mainpll" |
 			awk -F"'" '{ gsub("\\.","_",$2) ; \
 				print "#define" " " toupper($2) " " $4}' |
-			sed 's/\.[0-9]//' |
-			sed 's/I_CLK_MGR_//' |
+			gsed 's/\.[0-9]//' |
+			gsed 's/I_CLK_MGR_//' |
 			sort
 	fix_newlines_in_macros \
 		${hps_xml} | egrep "i_clk_mgr_perpll" |
 			awk -F"'" '{ gsub("\\.","_",$2) ; \
 				print "#define" " " toupper($2) " " $4}' |
-			sed 's/\.[0-9]//' |
-			sed 's/I_CLK_MGR_//' |
+			gsed 's/\.[0-9]//' |
+			gsed 's/I_CLK_MGR_//' |
 			sort
 	fix_newlines_in_macros \
 		${hps_xml} | egrep "i_clk_mgr_clkmgr" |
 			awk -F"'" '{ gsub("\\.","_",$2) ; \
 				print "#define" " " toupper($2) " " $4}' |
-			sed 's/\.[0-9]//' |
-			sed 's/I_CLK_MGR_//' |
+			gsed 's/\.[0-9]//' |
+			gsed 's/I_CLK_MGR_//' |
 			sort
 	fix_newlines_in_macros \
 		${hps_xml} | egrep "i_clk_mgr_alteragrp" |
 			awk -F"'" '{ gsub("\\.","_",$2) ; \
 				print "#define" " " toupper($2) " " $4}' |
-			sed 's/\.[0-9]//' |
-			sed 's/I_CLK_MGR_//' |
+			gsed 's/\.[0-9]//' |
+			gsed 's/I_CLK_MGR_//' |
 			sort
 	echo "#define ALTERAGRP_MPUCLK ((ALTERAGRP_MPUCLK_PERICNT << 16) | \\"
 	echo "	(ALTERAGRP_MPUCLK_MAINCNT))"
@@ -80,11 +80,11 @@ EOF
 		${hps_xml} | egrep "i_io48_pin_mux" |
 			awk -F"'" '{ gsub("\\.","_",$2) ; \
 				print "#define" " " toupper($2) " " $4}' |
-			sed 's/I_IO48_PIN_MUX_//' |
-			sed 's/SHARED_3V_IO_GRP_//' |
-			sed 's/FPGA_INTERFACE_GRP_//' |
-			sed 's/DEDICATED_IO_GRP_//' |
-			sed 's/CONFIGURATION_DEDICATED/CONFIG/' |
+			gsed 's/I_IO48_PIN_MUX_//' |
+			gsed 's/SHARED_3V_IO_GRP_//' |
+			gsed 's/FPGA_INTERFACE_GRP_//' |
+			gsed 's/DEDICATED_IO_GRP_//' |
+			gsed 's/CONFIGURATION_DEDICATED/CONFIG/' |
 			sort
 
 	echo
@@ -93,8 +93,8 @@ EOF
 		${hps_xml} | egrep "AXI_SLAVE|AXI_MASTER" |
 			awk -F"'" '{ gsub("\\.","_",$2) ; \
 				print "#define" " " toupper($2) " " $4}' |
-			sed 's/true/1/' |
-			sed 's/false/0/' |
+			gsed 's/true/1/' |
+			gsed 's/false/0/' |
 			sort
 
 	echo

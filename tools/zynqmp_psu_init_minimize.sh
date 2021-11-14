@@ -39,25 +39,25 @@ TMP=$(mktemp /tmp/psu_init_gpl.XXXXXX)
 trap "rm ${TMP}" ERR
 
 # Step through a temp file to allow both $IN!=$OUT and $IN==$OUT
-sed -e '/sleep.h/d' \
+gsed -e '/sleep.h/d' \
     -e '/xil_io.h/d' \
     ${IN} >${TMP}
 cp ${TMP} ${OUT}
 
 # preprocess to expand defines, then remove cpp lines starting with '#'
 gcc -I${1} -E ${OUT} -o ${TMP}
-sed '/^#/d' ${TMP} >${OUT}
+gsed '/^#/d' ${TMP} >${OUT}
 
 # Remove trivial code before psu_pll_init_data()
-sed -ni '/psu_pll_init_data/,$p' ${OUT}
+gsed -ni '/psu_pll_init_data/,$p' ${OUT}
 
 # Functions are lowercase in U-Boot, rename them
-sed -i 's/PSU_Mask_Write/psu_mask_write/g' ${OUT}
-sed -i 's/mask_pollOnValue/mask_pollonvalue/g' ${OUT}
-sed -i 's/RegValue/regvalue/g' ${OUT}
-sed -i 's/MaskStatus/maskstatus/g' ${OUT}
+gsed -i 's/PSU_Mask_Write/psu_mask_write/g' ${OUT}
+gsed -i 's/mask_pollOnValue/mask_pollonvalue/g' ${OUT}
+gsed -i 's/RegValue/regvalue/g' ${OUT}
+gsed -i 's/MaskStatus/maskstatus/g' ${OUT}
 
-sed -i '/&= psu_peripherals_powerdwn_data()/d' ${OUT}
+gsed -i '/&= psu_peripherals_powerdwn_data()/d' ${OUT}
 
 FUNCS_TO_REMOVE="psu_protection
 psu_..._protection
@@ -77,24 +77,24 @@ xmpu
 xppu
 "
 for i in $FUNCS_TO_REMOVE; do
-sed -i "/$i/,/^}$/d" ${OUT}
+gsed -i "/$i/,/^}$/d" ${OUT}
 done
 
 scripts/Lindent ${OUT}
 
 # Prepend 'static' to internal functions
-sed -i 's/^.*data(void)$/static &/g' ${OUT}
-sed -i 's/^.*psu_afi_config(void)$/static &/g' ${OUT}
-sed -i 's/^void init_peripheral/static &/g' ${OUT}
-sed -i 's/^int serdes/static &/g' ${OUT}
-sed -i 's/^int init_serdes/static &/g' ${OUT}
-sed -i 's/^unsigned long /static &/g' ${OUT}
+gsed -i 's/^.*data(void)$/static &/g' ${OUT}
+gsed -i 's/^.*psu_afi_config(void)$/static &/g' ${OUT}
+gsed -i 's/^void init_peripheral/static &/g' ${OUT}
+gsed -i 's/^int serdes/static &/g' ${OUT}
+gsed -i 's/^int init_serdes/static &/g' ${OUT}
+gsed -i 's/^unsigned long /static &/g' ${OUT}
 
-sed -i 's/()$/(void)/g' ${OUT}
-sed -i 's/0X/0x/g' ${OUT}
+gsed -i 's/()$/(void)/g' ${OUT}
+gsed -i 's/0X/0x/g' ${OUT}
 
 # return (0) -> return 0
-sed -ri 's/return \(([0-9]+)\)/return \1/g' ${OUT}
+gsed -ri 's/return \(([0-9]+)\)/return \1/g' ${OUT}
 
 # Add header
 cat << EOF >${TMP}
@@ -119,27 +119,27 @@ tr "\n" "\r" <${OUT} >${TMP}
 # |           | ==> |while (e)|
 # |    }      |     |    ;    |
 # |           |
-sed -i -r 's| \{\r+(\t*)\}\r\r|\n\1\t;\n|g' ${TMP}
+gsed -i -r 's| \{\r+(\t*)\}\r\r|\n\1\t;\n|g' ${TMP}
 
 # Remove empty line between variable declaration
-sed -i -r 's|\r(\r\t(unsigned )?int )|\1|g' ${TMP}
+gsed -i -r 's|\r(\r\t(unsigned )?int )|\1|g' ${TMP}
 
 # Remove empty lines at function beginning/end
-sed -i -e 's|\r{\r\r|\r{\r|g' ${TMP}
-sed -i -e 's|\r\r}\r|\r}\r|g' ${TMP}
+gsed -i -e 's|\r{\r\r|\r{\r|g' ${TMP}
+gsed -i -e 's|\r\r}\r|\r}\r|g' ${TMP}
 
 # Remove empty lines after '{' line
-sed -i -e 's| {\r\r| {\r|g' ${TMP}
+gsed -i -e 's| {\r\r| {\r|g' ${TMP}
 
 # Remove braces {} around single statement blocks. E.g.:
 # | while (e) { |    | while (e) |
 # |     stg();  | => |     stg();|
 # | }           |
-sed -i -r 's| \{(\r[^\r]*;)\r\t*\}|\1|g' ${TMP}
+gsed -i -r 's| \{(\r[^\r]*;)\r\t*\}|\1|g' ${TMP}
 
 # Remove Unnecessary parentheses around 'n_code <= 0x3C' and similar. E.g.:
 # if ((p_code >= 0x26) && ...) -> if (p_code >= 0x26 && ...)
-sed -i -r 's|\((._code .= [x[:xdigit:]]+)\)|\1|g' ${TMP}
+gsed -i -r 's|\((._code .= [x[:xdigit:]]+)\)|\1|g' ${TMP}
 
 # Convert back newlines
 tr "\r" "\n" <${TMP} >${OUT}

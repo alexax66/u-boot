@@ -4,7 +4,7 @@
 # B&R Industrial Automation GmbH - http://www.br-automation.com
 #
 
-hw-platform-y :=$(shell echo $(CONFIG_DEFAULT_DEVICE_TREE) | sed -e 's/am335x-//')
+hw-platform-y :=$(shell echo $(CONFIG_DEFAULT_DEVICE_TREE) | gsed -e 's/am335x-//')
 
 payload_off :=$(shell printf "%d" $(CONFIG_SYS_SPI_U_BOOT_OFFS))
 

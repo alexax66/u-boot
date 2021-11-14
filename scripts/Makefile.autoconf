@@ -56,7 +56,7 @@ include/autoconf.mk.dep: include/config.h FORCE
 # same CONFIG macros
 quiet_cmd_autoconf = GEN     $@
       cmd_autoconf = \
-		sed -n -f $(srctree)/tools/scripts/define2mk.sed $< |			\
+		gsed -n -f $(srctree)/tools/scripts/define2mk.sed $< |			\
 		while read line; do							\
 			if [ -n "${KCONFIG_IGNORE_DUPLICATES}" ] ||			\
 			   ! grep -q "$${line%=*}=" include/config/auto.conf; then	\
